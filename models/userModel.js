@@ -10,6 +10,14 @@ const userSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    dob:{
+        type:String,
+        required:true
+    },
+    gender:{
+        type:String,
+        required:true
+    },
 
     mobile:{
         type:Number,
@@ -31,10 +39,7 @@ const userSchema = mongoose.Schema({
     type:String,
     required:true
    },
-    pwd:{
-        type:String,
-        required:false
-    },
+   
     is_admin:{
         type:Number,
         required:true

@@ -355,14 +355,19 @@
           %>
         
             <input type="text" name="name" placeholder="Full Name" required>
-            <!-- <input type="text" name="name" placeholder="Date of Birth" required> -->
-            <!-- <div class="form-group">
+            <div class="form-group">
+              <label for="">Date of Birth</label>
+              <input type="date" name="dob" placeholder="Date of Birth" required>
+            </div>
+            
+            
+            <div class="form-group">
               <label for="Gender">Gender</label>
-              <select name="Gender" id="Gender">
+              <select name="gender" id="gender">
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
-            </div> -->
+            </div>
          
             <input type="email" name="email" placeholder="Enter Email" required>
             
@@ -382,7 +387,6 @@
             <h1 class="text-center text-secondary mt-5">No Users Found in the Database !</h1>
             <% } %>
         
-            <input type="text" name="pwd" placeholder="PWD">
          
             <input type="number" name="mobile" placeholder="Enter Mobile Number" required>
             

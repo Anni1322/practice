@@ -119,10 +119,11 @@ const insertUser = async(req, res)=>{
         const user = new User({
             name:req.body.name,
             email:req.body.email,
+            dob:req.body.dob,
+            gender:req.body.gender,
             mobile:req.body.mobile,
             address:req.body.address,
             designation:req.body.designation,
-            pwd:req.body.pwd,
             department:req.body.department,
             image:req.file.filename,
             password:spassword,
@@ -167,7 +168,8 @@ const addLeave = async(req, res)=>{
             status:"Pending",
             applied_date:date,
             user_id:req.body.user_id,
-            days:req.body.days
+            days:req.body.days,
+          
            
         });
 

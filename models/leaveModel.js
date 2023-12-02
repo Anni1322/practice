@@ -32,10 +32,12 @@ const leaveSchema = mongoose.Schema({
         type:String,
         required:true
     },
-   
     status:{
         type:String,
         required:true
+    },
+    reason:{
+        type:String,
     },
     applied_date:{
         type:Date,

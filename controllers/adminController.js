@@ -110,39 +110,52 @@ const loadRegister = async (req, res) => {
      console.log(error.message)
  }
 };
-const insertUser = async (req, res) => {
-  try {
-    const spassword = await securePassword(req.body.password);
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      mobile: req.body.mobile,
-      address: req.body.address,
-      designation: req.body.designation,
-      pwd: req.body.pwd,
-      department: req.body.department,
-      image: req.file.filename,
-      password: spassword,
-      eid: "prsu101",
-      is_admin: 0,
-    });
 
-    const userData = await user.save();
-    if (userData) {
-      sendvarifyMail(req.body.name, req.body.email, userData._id);
-      res.render("registration", {
-        message:
-          "Your registration has been successflly, Please varify your email",
+const insertUser = async(req, res)=>{
+  try{  
+
+      const email = req.body.email;
+      const existmail = await User.findOne({email: email });
+      if (existmail) {
+          // alert('This Email Allready exist');
+          res.render('login',{message:'This Email Allready exist '});
+          
+
+      } else {
+          
+      const spassword = await securePassword(req.body.password);
+      const user = new User({
+          name:req.body.name,
+          email:req.body.email,
+          dob:req.body.dob,
+          gender:req.body.gender,
+          mobile:req.body.mobile,
+          address:req.body.address,
+          designation:req.body.designation,
+          department:req.body.department,
+          image:req.file.filename,
+          password:spassword,
+          eid:"prsu101",
+          is_admin:0
+          
       });
-    } else {
-      res.render("registration", {
-        message: "Your registration has been failed",
-      });
-    }
-  } catch (error) {
-    console.log(error.message);
+
+      const userData = await user.save();
+      if(userData){
+          sendvarifyMail(req.body.name, req.body.email, userData._id);
+          res.render('login',{message:'Your registration has been successflly, Please varify your email'})
+      }else{
+          res.render('registration',{message:'Your registration has been failed'})
+      }
   }
-};
+
+
+
+
+   }catch(error){
+       console.log(error.message)
+   }
+}
 
 const loadlogout = async (req, res) => {
   try {
@@ -512,7 +525,11 @@ const updateAction = async (req, res) => {
             leave_type:req.body.leave_type,
             start_date:req.body.start_date,
             end_date:req.body.end_date,
+            days:req.body.days,
             status: req.body.status,
+            reason: req.body.reason,
+            
+
             // applied_date:Date(),
           },
         }
