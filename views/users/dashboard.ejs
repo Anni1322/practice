@@ -117,6 +117,11 @@
         font-size: 24px;
         margin-top: 10px;
       }
+      .card a :hover{
+        font-size: 30px;
+        box-shadow: #0056b3;
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+      }
 
       .toggle-button {
         background: #ffffff00;
@@ -248,6 +253,28 @@
       .card_container {
         padding: 10px;
       }
+
+      .p-3 li {
+        width: 150px;
+        text-align: center;
+        background-color: #f5f6fa;
+        border-radius: 10px;
+        box-shadow: 5px 6px lightblue;
+      }
+      .p-3 li a{
+        text-align: center;
+        margin: 15px;
+        color: white;
+      }
+      .p-3 li a:hover{
+        font-size: 15px;
+        width: 100px;
+        background-color: #f5f6fa;
+        border-radius: 19px;
+         
+      }
+
+
    
       @media (max-width: 768px) {
         header a {
@@ -279,12 +306,9 @@
     <header class="app-header">
       <div class="app-logo">
         <div class="logo">
-
-            <img src="userimages/prsu.png" alt="" 
-            >
-          
+            <img src="userimages/prsu.png" alt="" >
         </div>
-        <div >
+        <div>
           <span >PTRSU-LMS            
             <h6> <div class="red" style="color: red; margin-right: 10px;">Pt. Ravishankar Shukla University, Raipur</div>
             <div class="red" style="color: rgb(19, 9, 212);margin-right: 10px;">Chhattisgarh, India</div>
@@ -369,13 +393,15 @@
               <h3>Leave</h3>
              <h6 style="margin-left: 10px; text-decoration: none;">Click Apply for Leave</h6></a>
           </div>
+       
           <div class="card" >
             <a href="/status?id=<%= user._id %>" style="text-decoration: none;">
+           
             <h3 style="color: green;">My Leave Status</h3>
               <h6 style="margin-left: 10px; text-decoration: none;">Check Status</h6></a>
           </div>
           <div class="card">
-            <a href="/history" style="text-decoration: none;">
+            <a href="/history?id=<%= user._id %>" style="text-decoration: none;">
               <h3 style="color: rgb(0, 21, 253); text-decoration: none; ">History</h3>
               <h6 style="margin-left: 10px; text-decoration: none; ">Check History</h6></a>
           </div>

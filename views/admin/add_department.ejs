@@ -53,18 +53,18 @@
 
 
 
-<% 
-if(typeof message !== 'undefined'){
-    %>
-    <p style="color: forestgreen;"> <%= message %></p>
-    <%
-}
-%>
+
 <form action="" method="post">
   
   <h1>Department Registration</h1>
 
-
+  <% 
+  if(typeof message !== 'undefined'){
+      %>
+      <p style="color: forestgreen;"> <%= message %></p>
+      <%
+  }
+  %>
     <input type="text" name="name" placeholder="Enter Department Name " required>
     <input type="text" name="code" placeholder="code Name" required>
  

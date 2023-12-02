@@ -23,6 +23,23 @@
         display: flex;
         background: #f4f4f4;
       }
+      .notification {
+      padding: 2px 0px;
+      margin: 0px 0px;
+      text-decoration: none;
+      position: relative;
+      display: inline-block;
+      border-radius: 3px;
+    }
+
+ 
+
+.notification .badge {
+  margin: 0px -24px;
+  position: absolute;
+  background-color: red;
+  /* color: white; */
+}
 
       /* Style the sidebar */
 
@@ -83,10 +100,7 @@
         margin-right: 10px;
       }
 
-      .notifications {
-        margin: 10px;
-        font-size: 18px;
-      }
+       
 
       /* Style dashboard cards or widgets */
       .cards {
@@ -118,6 +132,11 @@
         margin: 10px;
         font-size: 24px;
         margin-top: 10px;
+      }
+      .card a :hover{
+        font-size: 30px;
+        box-shadow: #0056b3;
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1);
       }
 
       .toggle-button {
@@ -250,7 +269,26 @@
       .card_container {
         padding: 10px;
       }
-   
+
+      .p-3 li {
+        width: 150px;
+        text-align: center;
+        background-color: #f5f6fa;
+        border-radius: 10px;
+        box-shadow: 5px 6px lightblue;
+      }
+      .p-3 li a{
+        text-align: center;
+        margin: 15px;
+        color: white;
+      }
+      .p-3 li a:hover{
+        font-size: 15px;
+        width: 100px;
+        background-color: #f5f6fa;
+        border-radius: 19px;
+         
+      }
       @media (max-width: 768px) {
         header a {
           margin: 0 10px;
@@ -320,9 +358,10 @@
        
         <ul class="p-3">
           <li><a href="/admin/home">Dashboard</a></li>
-          <li><a href="/admin/database">Details</a></li>
+          <li><a href="/admin/database">Database</a></li>
           <li><a href="/admin/profile">Profile</a></li>
           <li><a href="/admin/register">Add Employee</a></li>
+          <li><a href="/admin/department">Add department</a></li>
           <!-- Add more navigation links as needed -->
         </ul>
       </aside>
@@ -350,7 +389,8 @@
           </a>
             <span>Welcome <span style="color: rgb(0, 136, 255); font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">Admin</span>, <%= user.name %></span>
           </div>
-          <div class="notifications">
+          <div class="notification">
+            <a href="/admin/pending">
             <img
             src="userimages/logo/notification.png"
             alt="User Avatar"
@@ -359,6 +399,8 @@
             width="50"
             height="50"
           />
+          <span class="badge"><%= PendingCount %></span>
+        </a>
           </div>
 
         </header>
@@ -378,12 +420,12 @@
             <p style="color: rgb(21, 0, 255);"><%= PendingCount %> </p></a>
           </div>
           <div class="card" >
-            <a href="/pending" style="text-decoration: none;"><h3>Approved</h3>
+            <a href="/admin/approved" style="text-decoration: none;"><h3>Approved</h3>
             <p style="color: rgb(74, 181, 79);"><%= approvedCount %></p></a>
           </div>
           <div class="card">
-            <a href="/pending" style="text-decoration: none;"><h3>Rejected</h3>
-            <p style="color: rgb(255, 0, 0);"><%= RejectedCount%></p></a>
+            <a href="/admin/rejected" style="text-decoration: none;"><h3>Rejected</h3>
+            <p style="color: rgb(255, 0, 0);"><%= RejectedCount %></p></a>
           </div>
           <!-- Add more cards as needed -->
         </section>

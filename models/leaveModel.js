@@ -11,6 +11,11 @@ const leaveSchema = mongoose.Schema({
         required:true
 
     },
+    d_name:{
+        type:String,
+        required:true
+
+    },
     leave_type:{
         type:String,
         required:true

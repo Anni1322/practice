@@ -322,16 +322,15 @@
             <!-- Cards or widgets for displaying data or information -->
             <div class="card">
               <h3>Total Department</h3>
-              <p> 1</p>
+              <p> <%= departmentCount %></p>
             </div>
             <!-- Add more cards as needed -->
           </section>
       
            
           <div class="container">
-            <button class="btn">
-            <a href="/admin/Add_department"
-            style="text-decoration: none; color: rgb(72, 0, 255)">Add
+            <button class="btn" style="text-decoration: none; color: rgb(135, 89, 252)">
+            <a href="/admin/Add_department" style="text-decoration: none;">Add
             </a>
             </button>
         </div>
@@ -339,25 +338,33 @@
          
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Code</th>
-                <th>name</th>
-                <th>name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>csit</th>
-                <th>csit</th>
-                <th>csit</th>
-                <th>csit</th>
-              
-            </tr>
-        </tbody>
-      </table>
+    <div class="table-responsive">
+      <a href="/admin/home">Home</a>
+  <!-- for each ejs -->
+  <% if (users != ''){%>
+  <table class="table table-striped text-center my-3">
+  <thead class="table-dark">
+  <tr>
+      <th>S No.</th>
+      <th>Department Name</th>
+      <th>Code</th>
+  </tr>
+  </thead>  
+  <tbody>
+  <!-- for each ejs -->
+  <% users.forEach((row, index) =>{ %>
+      <tr class="align-middle">      
+          <td><%= index %> </td>
+          <td><%= row.name %> </td>
+          <td><%= row.code %> </td>
+      </tr>                            
+  <% }) %>               
+  </tbody>
+  </table>
+  <% } else { %>
+  <h1 class="text-center text-secondary mt-5">No Users Found in the Database !</h1>
+  <% } %>
+  </div>
 
 
 </body>

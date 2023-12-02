@@ -8,7 +8,6 @@ user_route.use(session({
     secret:config.sessionSecret,
     resave: false,  
     saveUninitialized: false,
-
 }));
 
 // for auth
@@ -58,6 +57,10 @@ user_route.post('/register',upload.single('image'),userController.insertUser);
 // user_route.get('/applyleave',auth.isLogout,userController.loadapplyleave);
 user_route.post('/applyleave',upload.single('image'),userController.addLeave);
 user_route.get('/applyleave',auth.isLogin,userController.applyleave);
+user_route.get('/editapplyleave',auth.isLogin,userController.editapplyleaveLoad);
+// user_route.post('/editapplyleave',upload.single('image'),userController.updateapplyleave);
+
+
 
 user_route.get('/verify',userController.verifymail);
 // user_route.get('/loginverify',userController.verifyLogin);

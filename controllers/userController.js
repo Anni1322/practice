@@ -1,12 +1,14 @@
 const User = require('../models/userModel');
 const Leave = require('../models/leaveModel');
+const Department = require("../models/department");
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 
 
 const config = require('../config/config');
 
-const randomstring = require('randomstring')
+const randomstring = require('randomstring');
+const { render } = require('ejs');
 
 // s password 
 const securePassword = async(password)=>{
@@ -85,11 +87,14 @@ const sendResetPasswordMail = async(name, email, token)=>{
 
 const loadRegister = async(req, res)=>{
     try{
-       res.render('registration')
+       const departmentData = await Department.find();
+       res.render('registration',{department:departmentData})
     }catch(error){
         console.log(error.message)
     }
 }
+
+
 const loadapplyleave = async(req, res)=>{
     try{
        res.render('applyleave')
@@ -99,7 +104,17 @@ const loadapplyleave = async(req, res)=>{
 }
 
 const insertUser = async(req, res)=>{
-    try{
+    try{  
+
+        const email = req.body.email;
+        const existmail = await User.findOne({email: email });
+        if (existmail) {
+            // alert('This Email Allready exist');
+            res.render('login',{message:'This Email Allready exist '});
+            
+
+        } else {
+            
         const spassword = await securePassword(req.body.password);
         const user = new User({
             name:req.body.name,
@@ -119,10 +134,13 @@ const insertUser = async(req, res)=>{
         const userData = await user.save();
         if(userData){
             sendvarifyMail(req.body.name, req.body.email, userData._id);
-            res.render('registration',{message:'Your registration has been successflly, Please varify your email'})
+            res.render('login',{message:'Your registration has been successflly, Please varify your email'})
         }else{
             res.render('registration',{message:'Your registration has been failed'})
         }
+    }
+
+
 
 
      }catch(error){
@@ -132,21 +150,28 @@ const insertUser = async(req, res)=>{
 
 const addLeave = async(req, res)=>{
     try{   
-        
         const users = await User.findById({_id:req.session.user_id});
+        // get data 
+        
+        const currentDate = new Date();
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const date = currentDate.toLocaleDateString('en-US', options);
+
         const leave = new Leave({
             name:req.body.name,
             eid:req.body.eid,
+            d_name:req.body.d_name,
             leave_type:req.body.leave_type,
             start_date:req.body.start_date,
             end_date:req.body.end_date,
             status:"Pending",
-            applied_date:Date(),
+            applied_date:date,
             user_id:req.body.user_id,
             days:req.body.days
            
         });
 
+      
         const userData = await leave.save();
         if(userData){
             res.render('applyleave',{message:'Apply has been successflly.',user:users})
@@ -167,10 +192,11 @@ const addLeave = async(req, res)=>{
 const applyleave = async(req, res)=>{
 
     try {
-
+        const departmentData = await Department.find();
         const userData = await User.findById({_id:req.session.user_id});
         if(userData){
-            res.render('applyleave',{user:userData});
+            
+            res.render('applyleave',{user:userData,department:departmentData});
         }else{
             res.redirect('/home');
         }
@@ -391,6 +417,22 @@ const updateProfile = async(req, res)=>{
     }
 }
 
+const editapplyleaveLoad = async(req, res)=>{
+    try {
+        const id = req.query.id;
+        const leaveData = await Leave.findById({ _id: id });
+        if (leaveData) {
+          res.render("edit-applyleave", { leave: leaveData });
+        } else {
+          res.redirect("/home");
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+}
+
+
+
 
 // dashbord
 const  loadDashboard = async(req, res)=>{
@@ -449,6 +491,7 @@ module.exports ={
     sentverificationLink,
     editLoad,
     updateProfile,
+    editapplyleaveLoad,
     loadDashboard,
     applyleave,
     addLeave,

@@ -38,7 +38,8 @@
         <td><%= row.leave_type %> </td>                  
         <td><%= row.status %> </td>                              
         <td>
-            <a href="/admin/edit?id=<%= row._id %>"> <i class="text-success fas fa-edit fa-lg mx-1"></i></a>
+            <a href="/editapplyleave?id=<%= row._id %>"> <i class="text-success fas fa-edit fa-lg mx-1"></i></a>
+            <a href="/print?id=<%= row._id %>"> <i class="text-success fas fa-print fa-lg mx-1"></i></a>
         </td>
     </tr>                            
 <% }) %>               

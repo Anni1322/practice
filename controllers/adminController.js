@@ -3,6 +3,9 @@ const Leave = require("../models/leaveModel");
 const Department = require("../models/department");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const ExcelJS = require('exceljs');
+const Docxtemplater = require('docxtemplater');
+
 
 const config = require("../config/config");
 
@@ -10,6 +13,10 @@ const randomstring = require("randomstring");
 
 const multer = require("multer");
 const fs = require("fs");
+ 
+const ejs = require('ejs');
+const pdf = require('html-pdf');
+const path = require('path')
 
 // s password
 const securePassword = async (password) => {
@@ -96,11 +103,12 @@ const verifyLogin = async (req, res) => {
 };
 
 const loadRegister = async (req, res) => {
-  try {
-    res.render("registration");
-  } catch (error) {
-    console.log(error.message);
-  }
+  try{
+    const departmentData = await Department.find();
+    res.render('registration',{department:departmentData})
+ }catch(error){
+     console.log(error.message)
+ }
 };
 const insertUser = async (req, res) => {
   try {
@@ -281,13 +289,11 @@ const updateProfile = async (req, res) => {
 const loaddelete = async (req, res) => {
   try {
     const id = req.params.id;
-
     // Find the user by ID and remove it
     const removedUser = await User.findByIdAndRemove(id);
     if (!removedUser) {
       return res.json({ message: "User not found", type: "danger" });
     }
-
     // Remove the associated image from the uploads directory
     try {
       fs.unlinkSync("./uploads/" + removedUser.image);
@@ -307,6 +313,36 @@ const loaddelete = async (req, res) => {
   }
 };
 
+const loaddeleteLeave = async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Find the user by ID and remove it
+    const removedUser = await Leave.findByIdAndRemove(id);
+    if (!removedUser) {
+      return res.json({ message: "User not found", type: "danger" });
+    }
+    // Remove the associated image from the uploads directory
+    try {
+      fs.unlinkSync("./uploads/" + removedUser.image);
+    } catch (err) {
+      console.error(err);
+    }
+
+    req.session.message = {
+      type: "success",
+      message: "User deleted successfully",
+    };
+
+    res.redirect("/admin/home");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+
 //
 // dashbord
 const loadDashboard = async (req, res) => {
@@ -318,6 +354,25 @@ const loadDashboard = async (req, res) => {
 
     // user for home page
     res.render("dashboard", {
+      user: userData,
+      PendingCount: PendingCount,
+      approvedCount:approvedCount,
+      RejectedCount:RejectedCount
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+// loaddomhome
+const loaddomhome = async (req, res) => {
+  try {
+    const userData = await User.findById({ _id: req.session.user_id });
+    const PendingCount = await Leave.find({status:"Pending"}).count();
+    const approvedCount = await Leave.find({status:"Approved"}).count();
+    const RejectedCount = await Leave.find({status:"Rejected"}).count();
+
+    // user for home page
+    res.render("domhome", {
       user: userData,
       PendingCount: PendingCount,
       approvedCount:approvedCount,
@@ -386,10 +441,42 @@ const loadstatus = async (req, res) => {
 // loadpending
 const loadpending = async (req, res) => {
   try {
+    const PendingCount = await Leave.find({status:"Pending"});
     const leave = await Leave.find().exec();
     res.render("pending", {
       title: "pending",
       leaves: leave,
+      PendingCount:PendingCount
+    });
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+
+// loadapproved
+const loadapproved = async (req, res) => {
+  try {
+    const approvedCount = await Leave.find({status:"Approved"});
+    const leave = await Leave.find().exec();
+    res.render("approved", {
+      title: "approved",
+      leaves: leave,
+      approvedCount:approvedCount
+    });
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+
+// loadrejected
+const loadrejected = async (req, res) => {
+  try {
+    const RejectedCount = await Leave.find({status:"Rejected"});
+    const leave = await Leave.find().exec();
+    res.render("rejected", {
+      title: "rejected",
+      leaves: leave,
+      RejectedCount:RejectedCount
     });
   } catch (err) {
     res.json({ message: err.message });
@@ -454,8 +541,23 @@ const loadadmintable = async(req, res)=>{
 
 const loaddepartment = async(req, res)=>{
   try {
-    const users = await User.find().exec();
+    const departmentCount = await Department.find().count();
+    const users = await Department.find().exec();
     res.render("department", {
+      title: "department",
+      users: users,
+      departmentCount:departmentCount
+    });
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+
+
+const loadAddDepartment = async(req, res)=>{
+  try {
+    const users = await Department.find().exec();
+    res.render("add_department", {
       title: "department",
       users: users,
     });
@@ -463,6 +565,7 @@ const loaddepartment = async(req, res)=>{
     res.json({ message: err.message });
   }
 };
+
 
 
 const adddepartment = async (req, res) => {
@@ -474,10 +577,84 @@ const adddepartment = async (req, res) => {
     });
 
     const depData = await dep.save();
-      res.render("add_department");
+      res.render("add_department",{message:"saved"});
       
   } catch (error) {
     console.log(error.message);
+  }
+};
+
+const userexport = async (req, res) => {
+  try {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("My User");
+
+      worksheet.columns = [
+          { header: "S no", key: "s_no" },
+          { header: "Name", key: "name" },
+          { header: "Email", key: "email" },
+          { header: "Mobile", key: "mobile" },
+          { header: "Image", key: "image" },
+          { header: "address", key: "address" },
+          { header: "Designation", key: "designation" },
+          { header: "Is_admin", key: "is_admin" },
+          { header: "eid", key: "eid" },
+          { header: "department", key: "eidepartmentd" },
+      ];
+
+      let counter = 1;
+      const userData = await User.find({ is_admin: 0 });
+
+      userData.forEach((user) => {
+          user.s_no = counter;
+          worksheet.addRow(user);
+          counter++;
+      });
+
+      worksheet.getRow(1).eachCell((cell) => {
+          cell.font = { bold: true };
+      });
+
+      res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=users.xlsx"
+      );
+
+      return workbook.xlsx.write(res).then(() => {
+          res.status(200).end();
+      });
+
+  } catch (error) {
+      console.log(error.message);
+  }
+};
+
+// pdf
+const userexportPdf = async (req, res) => {
+  try {
+    
+      const html = fs.readFileSync('../views/admin/htmltopdf.html','utf-8');
+    const options = {
+      format:'letter'
+    }
+
+      pdf.create(html,options).toBuffer('../views/admin/invoice.pdf',(err,res)=>{
+        if(err){
+          return console.log(err);
+        }else{
+          console.log(res);
+        }
+
+
+        
+      });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).send('Internal Server Error');
   }
 };
 
@@ -498,14 +675,22 @@ module.exports = {
   loadDatabase,
   loadtable,
   loaddelete,
+  loaddeleteLeave,
   loadProfile,
   loadRegister,
   insertUser,
   loadstatus,
   loadpending,
+  loadrejected,
+  loadapproved,
   actionLoad,
   updateAction,
   loadadmintable,
   loaddepartment,
-  adddepartment
+  adddepartment,
+  loadAddDepartment,
+  userexport,
+  userexportPdf,
+  loaddomhome
+
 };
