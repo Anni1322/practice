@@ -47,7 +47,7 @@ const sendResetPasswordMail = async (name, email, token) => {
       html:
         "<p> hi " +
         name +
-        ', Please click here to <a href="http://localhost:3000/admin/forget-password?token=' +
+        ', Please click here to <a href="https://practice-xexa.onrender.com/admin/forget-password?token=' +
         token +
         '">Reset</a> Your Password.</p>',
     };
