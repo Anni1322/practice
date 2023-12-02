@@ -4,7 +4,12 @@ const session = require('express-session');
 
 // for session 
 const config = require('../config/config');
-user_route.use(session({secret:config.sessionSecret}));
+user_route.use(session({
+    secret:config.sessionSecret,
+    resave: false,  
+    saveUninitialized: false,
+
+}));
 
 // for auth
 const auth = require('../middleware/auth');

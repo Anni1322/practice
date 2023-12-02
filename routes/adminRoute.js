@@ -3,7 +3,11 @@ const  admin_route = express();
 
 const session = require('express-session');
 const config = require('../config/config');
-admin_route.use(session({secret:config.sessionSecret}));
+admin_route.use(session({
+    secret:config.sessionSecret,
+    resave: false,  
+    saveUninitialized: false,
+}));
 
 const bodyParser = require('body-parser');
 admin_route.use(bodyParser.json());
