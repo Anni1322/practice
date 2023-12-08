@@ -47,9 +47,9 @@
         <td><%= row.region %></td>             
         <td><%= row.status %></td>             
         <td>
-            <a href="/admin/action?id=<%= row._id %>"> <i class="text-success fas fa-edit fa-lg mx-1"></i></a>
+            <a href="/admin/action?id=<%= row._id %>"> <i class="text-success fas fa-edit fa-lg mx-1 mt-3"></i></a>
             
-            <i class="text-danger fas fa-trash fa-lg mx-1" onclick="confirmDelete('<%= row._id %>')" ></i>
+            <i class="text-danger fas fa-trash fa-lg mx-1 mt-4" onclick="confirmDelete('<%= row._id %>')" ></i>
         </td>
     </tr>                            
 <% }) %>               
