@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <style>
+
+<%- include('../layouts/header.ejs') %>
+
+<style>
     /* Add your CSS styles here */
     body{
         background-color: #DADCF8;
@@ -22,7 +18,7 @@
     form {
         text-align: center;
         margin: 10px auto;
-        max-width: 300px;
+        max-width: 70%;
         max-height: 100%;
         padding: 20px;
         background-color: #ffffff;
@@ -33,7 +29,7 @@
     .other {
         text-align: center;
         margin: 0px auto;
-        max-width: 100%;
+        max-width: 70%;
         max-height: 100%;
         padding: 20px;
         background-color: #ffffff;
@@ -68,7 +64,6 @@
         margin-top: 10px;
     }
 </style>
-
 <style>
     /* Reset some default styles for better consistency */
     * {
@@ -310,71 +305,13 @@
     width: 100px;
     height: 100px;
     }
-
-    @media (max-width: 268px) {
-        /* Adjustments for smaller screens */
-
-        body {
-            background-color: #DADCF8;
-        }
-
-        form {
-            max-width: 100%;
-        }
-
-        .other {
-            max-width: 100%;
-        }
-
-        .sidebar {
-            width: 150px;
-        }
-
-        .card {
-            width: 100%;
-            min-width: auto; /* Override the min-width property for cards on smaller screens */
-        }
-
-        /* Add any additional adjustments for smaller screens */
-    }
 </style>
-</head>
 
-<body>
-  <header class="app-header">
-    <div class="app-logo">
-      <div class="logo">
-          <img src="userimages/prsu.png" alt="" >
-      </div>
-      <div>
-        <span >PTRSU-LMS            
-          <h6> <div class="red" style="color: red; margin-right: 10px;">Pt. Ravishankar Shukla University, Raipur</div>
-          <div class="red" style="color: rgb(19, 9, 212);margin-right: 10px;">Chhattisgarh, India</div>
-          NAAC Grade B++, Ranking by NIRF</h6>
-        </span>
-      </div>
-    </div>
-    <nav class="app-nav">
-      <ul>
-        <li>
-          <a href="/profile">
-        </a>
-        </li>
-   
-        <li>
-          <!-- <h5>
-            <a href="/logout">
-            <img
-            src="userimages/logo/exit.png"
-            alt="User Avatar"
-            width="30"
-            height="30"/>
-            Logout</a></h5> -->
-        </li>
-      </ul>
-    </nav>
-  </header>
-  <form action="/login" method="post">
+
+
+
+
+<form action="/login" method="post">
     <h1>Login</h1>
  
     <% if (typeof message !== 'undefined') { %>
@@ -388,13 +325,12 @@
     <br><br>
     <input type="password" name="password" required placeholder="Password">
     <br><br>
-    <input type="submit" value="Login">  
+    <input type="submit" value="Login">
   
   
     
 </form>
 <div class="other">
-    <a href="/admin">Admin Login</a>
     <a href="/register">Register</a>
     <a href="/verification">Verification</a>
     <a href="/forget">Forget Password</a>
@@ -402,16 +338,5 @@
 
 
 <% include('../layouts/footer.ejs') %>
-
-</body>
-</html>
- 
-
-
-
-
-
-
-
 
 
